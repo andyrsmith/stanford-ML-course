@@ -69,17 +69,24 @@ a2 = [ones(m,1) a2];
 z3 = a2 * Theta2';
 a3 = sigmoid(z3);
 J = 1/m * sum(sum(-y_matrix .* log(a3) - (1-y_matrix) .* log(1- a3)));
+reg = lambda/(2*m) * (sum(sum(Theta1(:, 2:end).^2)) + sum(sum(Theta2(:, 2:end).^2)));
+J = J + reg;
 
 
+d2 = a3 - y_matrix;
+d1 = Theta2(:,2:end)' * d2';
+d1_2 = a2(:,2:end) .*(1 - a2(:,2:end));
+d1 = d1' .* d1_2;
+delta1 = d1' *X;
+delta2 = d2' *a2;
 
+Theta1_grad = 1/m * delta1;
+Theta2_grad = 1/m * delta2;
 
-
-
-
-
-
-
-
+Theta1(:,1) = 0;
+Theta2(:,1) = 0;
+Theta1_grad = Theta1_grad + (lambda/m) * Theta1;
+Theta2_grad = Theta2_grad + (lambda/m) * Theta2;
 
 
 
